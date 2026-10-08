@@ -92,7 +92,7 @@ npm start            # Jalankan server production
 ```
 users
 ├── id
-├── name
+├── full_name
 ├── email
 ├── password
 └── role
