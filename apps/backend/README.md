@@ -1,22 +1,22 @@
 <div align="center">
 
-  <h1>API Monorepo Starter Kit - Backend Workspace</h1>
+  <h1>PPDB Lite — Backend API</h1>
 
   <p>
-    <strong>The backend workspace for the AdonisJS API Monorepo starter kit.</strong>
+    <strong>Backend API untuk sistem PPDB (Penerimaan Peserta Didik Baru).</strong>
   </p>
 
   <p>
-    Built for teams who want a production-ready API inside a full-stack monorepo.
+    Dibangun dengan <a href="https://adonisjs.com">AdonisJS 7</a> + Lucid ORM + PostgreSQL.
   </p>
 
   <br>
 
-<a href="#-whats-in-the-box">Features</a>
+<a href="#-instalasi">Instalasi</a>
 <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-<a href="#-quick-start">Quick Start</a>
+<a href="#-routes-bawaan">Routes</a>
 <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-<a href="https://adonisjs.com">Documentation</a>
+<a href="#-database-schema">Database Schema</a>
 
   <br>
   <br>
@@ -25,210 +25,126 @@
 
 ---
 
-## ✨ What's in the Box
+## 🚀 Instalasi
 
-This backend workspace is designed to help you build production-ready APIs with AdonisJS. It provides a solid foundation with authentication, type-safe routes, and everything you need to power any frontend from a shared monorepo.
+### Prasyarat
 
-### 🎯 Core Features
+- **Node.js** 20+ dan **npm**
+- **PostgreSQL** (database aktif)
 
-- **🔐 Dual Authentication** - API tokens (default) and session-based authentication pre-configured
-- **🔄 RESTful API** - Clean API structure with versioning (`/api/v1`)
-- **🏥 Health Check** - Built-in health check endpoint for monitoring
-- **✅ Form Validation** - Powered by VineJS with automatic error handling
-- **🛡️ Security First** - CORS, Shield middleware, and secure authentication
-- **🔒 Type Safety** - End-to-end TypeScript with Tuyau for type-safe API calls
-- **🌐 CORS Ready** - Pre-configured for cross-origin requests
-- **📦 Monorepo** - Built with Turborepo and npm workspaces for optimal DX
-
-### 🔧 Tech Stack
-
-<table>
-  <tr>
-    <td><strong>Backend</strong></td>
-    <td>
-      <a href="https://adonisjs.com">AdonisJS 7.x</a> - Full-featured Node.js framework
-    </td>
-  </tr>
-  <tr>
-    <td><strong>Database</strong></td>
-    <td>
-      <a href="https://lucid.adonisjs.com">Lucid ORM</a> - SQL ORM with migrations (SQLite, PostgreSQL, MySQL, MSSQL)
-    </td>
-  </tr>
-  <tr>
-    <td><strong>Auth</strong></td>
-    <td>
-      API tokens (default) and session-based authentication
-    </td>
-  </tr>
-  <tr>
-    <td><strong>Validation</strong></td>
-    <td>
-      <a href="https://vinejs.dev">VineJS</a> - Type-safe schema validation
-    </td>
-  </tr>
-  <tr>
-    <td><strong>Type Safety</strong></td>
-    <td>
-      <a href="https://docs.adonisjs.com/guides/frontend/api-client">Tuyau</a> - End-to-end type safety for API calls
-    </td>
-  </tr>
-  <tr>
-    <td><strong>Testing</strong></td>
-    <td>
-      <a href="https://japa.dev">Japa</a> - Delightful testing framework
-    </td>
-  </tr>
-  <tr>
-    <td><strong>TypeScript</strong></td>
-    <td>
-      Full TypeScript support with strict mode enabled
-    </td>
-  </tr>
-  <tr>
-    <td><strong>Monorepo</strong></td>
-    <td>
-      <a href="https://turbo.build">Turborepo</a> + npm workspaces
-    </td>
-  </tr>
-</table>
-
----
-
-## 🚀 Quick Start
-
-### From the Monorepo Root
+### Dari root monorepo
 
 ```bash
 # Install dependencies
 npm install
 
-# Run the development server (both backend and frontend)
+# Jalankan semua app (backend + frontend)
 npm run dev
-
-# Run tests
-npm run test
-
-# Type check all apps
-npm run typecheck
-
-# Lint all apps
-npm run lint
-
-# Build for production
-npm run build
 ```
 
-### Backend Only (from apps/backend)
+### Backend saja (dari `apps/backend`)
 
 ```bash
-# Run the development server with hot reload
+# 1. Siapkan environment
+cp .env.example .env
+
+# 2. Generate APP_KEY
+node ace generate:key
+
+# 3. Atur koneksi database di .env
+#    DB_URL=postgresql://user:password@host:5432/nama_database
+
+# 4. Jalankan migrasi
+node ace migration:run
+
+# 5. Jalankan development server (hot reload)
 node ace serve --hmr
-
-# Run tests
-node ace test
-
-# Type check
-npm run typecheck
-
-# Lint your code
-npm run lint
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
 ```
 
-Your API will be running at `http://localhost:3333`
+API akan berjalan di `http://localhost:3333`.
 
-### Available Endpoints
+### Perintah lainnya
 
-- `POST /api/v1/auth/signup` - Create a new account
-- `POST /api/v1/auth/login` - Login and get access token
-- `POST /api/v1/auth/logout` - Logout (requires authentication)
-- `GET /api/v1/account/profile` - Get current user profile (requires authentication)
-
----
-
-## 📚 Learn More
-
-<table>
-  <tr>
-    <td>
-      <a href="https://docs.adonisjs.com"><strong>📖 AdonisJS Docs</strong></a>
-      <br>
-      <span>Complete guide to AdonisJS</span>
-    </td>
-    <td>
-      <a href="https://docs.adonisjs.com/guides/frontend/api-client"><strong>🔒 Tuyau</strong></a>
-      <br>
-      <span>Type-safe API calls</span>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <a href="https://lucid.adonisjs.com"><strong>💾 Lucid ORM</strong></a>
-      <br>
-      <span>Database queries and relationships</span>
-    </td>
-    <td>
-      <a href="https://vinejs.dev"><strong>✅ VineJS</strong></a>
-      <br>
-      <span>Schema validation guide</span>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <a href="https://turbo.build"><strong>📦 Turborepo</strong></a>
-      <br>
-      <span>Monorepo build system</span>
-    </td>
-    <td>
-      <a href="https://docs.adonisjs.com/guides/security/cors"><strong>🌐 CORS Guide</strong></a>
-      <br>
-      <span>Configure CORS for your API</span>
-    </td>
-  </tr>
-</table>
+```bash
+node ace test        # Jalankan tests
+npm run typecheck    # Type check
+npm run lint         # Lint
+npm run build        # Build untuk production
+npm start            # Jalankan server production
+```
 
 ---
 
-## 🎨 Philosophy
+## 🛣️ Routes Bawaan
 
-This starter kit embraces the **API-first** approach to web development:
-
-- **Framework Agnostic** - Use any frontend framework (React, Vue, Svelte, Angular, etc.)
-- **Type Safety Everywhere** - TypeScript across the stack with Tuyau for type-safe API calls
-- **Dual Authentication** - API tokens for cross-origin and sessions for same-domain apps
-- **Convention Over Configuration** - Sensible defaults, escape hatches when you need them
-- **Developer Experience** - Hot reload, great error messages, instant feedback
-- **Production Ready** - Security, validation, and testing built-in
-
-### Authentication Strategies
-
-This starter kit provides both authentication strategies:
-
-- **API Tokens (Default)** - Use when your API and frontend are on different domains. Stateless and perfect for mobile apps, SPAs, and third-party integrations.
-- **Session-based** - Use when your API and frontend share the same top-level domain. Traditional cookie-based authentication with CSRF protection.
-
-You can easily switch between strategies by changing the guard in your middleware configuration.
+| Method | Endpoint                     | Deskripsi                             | Auth |
+| ------ | ---------------------------- | ------------------------------------- | ---- |
+| GET    | `/`                          | Health check (`{ hello: 'world' }`)   | ✖    |
+| POST   | `/api/v1/auth/signup`        | Registrasi akun baru, mengembalikan token | ✖ |
+| POST   | `/api/v1/auth/login`         | Login, mengembalikan access token     | ✖    |
+| GET    | `/api/v1/account/profile`    | Ambil profil user saat ini            | ✔    |
+| POST   | `/api/v1/account/logout`     | Logout (hapus access token aktif)     | ✔    |
 
 ---
 
-## 🤝 Contributing
+## 🗄️ Database Schema
 
-This starter kit is maintained by the AdonisJS team. Found a bug or have a suggestion? [Open an issue](https://github.com/adonisjs/starter-kits/issues) or submit a pull request!
+```
+users
+├── id
+├── name
+├── email
+├── password
+└── role
+    ├── admin
+    └── student
+
+registrations
+├── id
+├── user_id
+├── registration_number
+├── full_name
+├── nisn
+├── school_origin
+├── phone
+├── address
+├── average_score
+├── status
+│   ├── pending
+│   ├── approved
+│   └── rejected
+└── created_at
+
+documents
+├── id
+├── registration_id
+├── type
+├── file_path
+└── status
+
+scores
+├── id
+├── registration_id
+├── academic_score
+├── achievement_score
+└── final_score
+
+announcements
+├── id
+├── title
+├── content
+└── published_at
+```
+
+### Relasi
+
+- `users` **1 — N** `registrations` (via `registrations.user_id`)
+- `registrations` **1 — N** `documents` (via `documents.registration_id`)
+- `registrations` **1 — 1** `scores` (via `scores.registration_id`)
+- `announcements` berdiri sendiri (tidak terikat ke tabel lain)
 
 ---
 
 ## 📄 License
 
-This starter kit is open-sourced software licensed under the [MIT license](LICENSE).
-
----
-
-<div align="center">
-  <sub>Built with ❤️ by the AdonisJS team</sub>
-</div>
+Open-sourced software licensed under the [MIT license](LICENSE).
