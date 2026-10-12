@@ -10,19 +10,26 @@ export default class RegistrationPolicy extends BasePolicy {
         }
     }
 
+
     showMine(user: User | null, registration: Registration | null): AuthorizerResponse {
         return !!user && !!registration && user.id === registration.userId
     }
 
-    show(_user: User | null, _registration: Registration | null) {
+    async register(user: User | null) {
+        const existing = await Registration.findBy('userId', user?.id)
+
+        return !!user && !existing
+    }
+
+    show(_user: User | null) {
         return false
     }
 
-    update(_user: User | null, _registration: Registration | null) {
+    update(_user: User | null) {
         return false
     }
 
-    destroy(_user: User | null, _registration: Registration | null) {
+    destroy(_user: User | null) {
         return false
     }
 }

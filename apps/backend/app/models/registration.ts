@@ -12,18 +12,18 @@ export default class Registration extends RegistrationSchema {
     declare id: number
 
 
-    @column()
+    @column({ columnName: 'user_id' })
     @ApiProperty()
     declare userId: number
 
     @belongsTo(() => User)
     declare user: BelongsTo<typeof User>
 
-    @column()
+    @column({ columnName: 'registration_number' })
     @ApiProperty()
     declare registrationNumber: number
 
-    @column()
+    @column({ columnName: 'full_name' })
     @ApiProperty()
     declare fullName: string
 
@@ -31,7 +31,7 @@ export default class Registration extends RegistrationSchema {
     @ApiProperty()
     declare nisn: number
 
-    @column()
+    @column({ columnName: 'school_origin' })
     @ApiProperty()
     declare schoolOrigin: string
 
@@ -43,7 +43,7 @@ export default class Registration extends RegistrationSchema {
     @ApiProperty()
     declare address: string
 
-    @column()
+    @column({ columnName: 'average_score' })
     @ApiProperty()
     declare averageScore: number
 
@@ -51,7 +51,11 @@ export default class Registration extends RegistrationSchema {
     @ApiProperty()
     declare status: string
 
-    @column()
+    @column.dateTime({ autoCreate: true, columnName: 'created_at' })
     @ApiProperty()
-    declare createdAt: DateTime<boolean> | null
+    declare createdAt: DateTime<boolean>
+
+    @column.dateTime({ autoCreate: true, columnName: 'updated_at' })
+    @ApiProperty()
+    declare updatedAt: DateTime<boolean>
 }

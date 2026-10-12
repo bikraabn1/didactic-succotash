@@ -40,14 +40,15 @@ export default class RegistrationsController {
 
     async show({ response, params, bouncer }: HttpContext) {
         const targetRegistration = await Registration.findOrFail(params.id)
-        await bouncer.with(RegistrationPolicy).authorize('show', targetRegistration)
+        await bouncer.with(RegistrationPolicy).authorize('show')
         response.json({
             message: 'User fetched successfully',
             data: targetRegistration
         })
     }
 
-    async register({ auth, request, response }: HttpContext) {
+    async register({ auth, request, response, bouncer }: HttpContext) {
+        await bouncer.with(RegistrationPolicy).authorize('register')
         const payload = await request.validateUsing(registrationValidators)
         const user = auth.getUserOrFail()
         const registration = await this.registrationsService.register(user.id, payload)
@@ -61,7 +62,7 @@ export default class RegistrationsController {
     async update({ request, response, params, bouncer }: HttpContext) {
         const { id } = params
         const registration = await Registration.findOrFail(id)
-        await bouncer.with(RegistrationPolicy).authorize('update', registration)
+        await bouncer.with(RegistrationPolicy).authorize('update')
 
         const payload = await request.validateUsing(updateRegistrationValidators)
         const result = await this.registrationsService.update(registration, payload)
@@ -75,8 +76,8 @@ export default class RegistrationsController {
     async destroy({ params, response, bouncer }: HttpContext) {
         const { id } = params
         const registration = await Registration.findOrFail(id)
-        await bouncer.with(RegistrationPolicy).authorize('destroy', registration)
-        
+        await bouncer.with(RegistrationPolicy).authorize('destroy')
+
         const result = await this.registrationsService.destroy(registration)
 
         response.ok({

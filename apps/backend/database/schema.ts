@@ -40,25 +40,25 @@ export class RegistrationSchema extends BaseModel {
   @column()
   declare averageScore: number | null
   @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime | null
+  declare createdAt: DateTime
   @column()
-  declare fullName: string | null
+  declare fullName: string
   @column({ isPrimary: true })
   declare id: number
   @column()
-  declare nisn: number | null
+  declare nisn: number
   @column()
   declare phone: number | null
   @column()
-  declare registrationNumber: number | null
+  declare registrationNumber: number
   @column()
   declare schoolOrigin: string | null
   @column()
   declare status: string | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null
+  declare updatedAt: DateTime
   @column()
-  declare userId: number | null
+  declare userId: number
 }
 
 export class UserSchema extends BaseModel {
