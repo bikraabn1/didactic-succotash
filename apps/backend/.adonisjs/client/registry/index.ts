@@ -48,6 +48,18 @@ const routes = {
     tokens: [{"old":"/api/registrations/register","type":0,"val":"api","end":""},{"old":"/api/registrations/register","type":0,"val":"registrations","end":""},{"old":"/api/registrations/register","type":0,"val":"register","end":""}],
     types: placeholder as Registry['registrations.registrations.register']['types'],
   },
+  'registrations.registrations.update': {
+    methods: ["PATCH"],
+    pattern: '/api/registrations/update/:id',
+    tokens: [{"old":"/api/registrations/update/:id","type":0,"val":"api","end":""},{"old":"/api/registrations/update/:id","type":0,"val":"registrations","end":""},{"old":"/api/registrations/update/:id","type":0,"val":"update","end":""},{"old":"/api/registrations/update/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['registrations.registrations.update']['types'],
+  },
+  'registrations.registrations.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/registrations/delete/:id',
+    tokens: [{"old":"/api/registrations/delete/:id","type":0,"val":"api","end":""},{"old":"/api/registrations/delete/:id","type":0,"val":"registrations","end":""},{"old":"/api/registrations/delete/:id","type":0,"val":"delete","end":""},{"old":"/api/registrations/delete/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['registrations.registrations.destroy']['types'],
+  },
   'registrations.registrations.show': {
     methods: ["GET","HEAD"],
     pattern: '/api/registrations/:id',

@@ -49,6 +49,8 @@ router
         router.get('/', [controllers.Registrations, 'index'])
         router.get('/show-mine', [controllers.Registrations, 'showMine'])
         router.post('/register', [controllers.Registrations, 'register'])
+        router.patch('/update/:id', [controllers.Registrations, 'update'])
+        router.delete('/delete/:id', [controllers.Registrations, 'destroy'])
         router.get('/:id', [controllers.Registrations, 'show'])
       })
       .prefix('registrations')

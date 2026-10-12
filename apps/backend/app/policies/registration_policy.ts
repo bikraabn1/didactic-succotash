@@ -11,15 +11,18 @@ export default class RegistrationPolicy extends BasePolicy {
     }
 
     showMine(user: User | null, registration: Registration | null): AuthorizerResponse {
-        return !!user && !!registration && user.id === registration.user_id
-    }
-    
-    register() {
-        return true
-        
+        return !!user && !!registration && user.id === registration.userId
     }
 
-    show() {
+    show(_user: User | null, _registration: Registration | null) {
+        return false
+    }
+
+    update(_user: User | null, _registration: Registration | null) {
+        return false
+    }
+
+    destroy(_user: User | null, _registration: Registration | null) {
         return false
     }
 }

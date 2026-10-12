@@ -14,7 +14,7 @@ export default class Registration extends RegistrationSchema {
 
     @column()
     @ApiProperty()
-    declare user_id: number
+    declare userId: number
 
     @belongsTo(() => User)
     declare user: BelongsTo<typeof User>

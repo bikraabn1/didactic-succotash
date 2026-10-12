@@ -23,6 +23,8 @@ export interface ApiDefinition {
       index: typeof routes['registrations.registrations.index']
       showMine: typeof routes['registrations.registrations.show_mine']
       register: typeof routes['registrations.registrations.register']
+      update: typeof routes['registrations.registrations.update']
+      destroy: typeof routes['registrations.registrations.destroy']
       show: typeof routes['registrations.registrations.show']
     }
   }

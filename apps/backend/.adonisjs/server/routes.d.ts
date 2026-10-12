@@ -11,6 +11,8 @@ export type ScannedRoutes = {
     'registrations.registrations.index': { paramsTuple?: []; params?: {} }
     'registrations.registrations.show_mine': { paramsTuple?: []; params?: {} }
     'registrations.registrations.register': { paramsTuple?: []; params?: {} }
+    'registrations.registrations.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'registrations.registrations.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'registrations.registrations.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
@@ -30,6 +32,12 @@ export type ScannedRoutes = {
     'auth.access_tokens.store': { paramsTuple?: []; params?: {} }
     'profile.access_tokens.destroy': { paramsTuple?: []; params?: {} }
     'registrations.registrations.register': { paramsTuple?: []; params?: {} }
+  }
+  PATCH: {
+    'registrations.registrations.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+  }
+  DELETE: {
+    'registrations.registrations.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

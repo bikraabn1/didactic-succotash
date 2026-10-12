@@ -91,6 +91,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/registrations_controller').default['register']>>> | { status: 422; response: { errors: SimpleError[] } }
     }
   }
+  'registrations.registrations.update': {
+    methods: ["PATCH"]
+    pattern: '/api/registrations/update/:id'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/registration').updateRegistrationValidators)>>
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#validators/registration').updateRegistrationValidators)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/registrations_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/registrations_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'registrations.registrations.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/registrations/delete/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/registrations_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/registrations_controller').default['destroy']>>>
+    }
+  }
   'registrations.registrations.show': {
     methods: ["GET","HEAD"]
     pattern: '/api/registrations/:id'

@@ -1,7 +1,7 @@
 import Registration from '#models/registration'
 import RegistrationPolicy from '#policies/registration_policy'
 import { RegistrationService } from '#services/registration_service'
-import { registrationValidators } from '#validators/registration'
+import { registrationValidators, updateRegistrationValidators } from '#validators/registration'
 import { inject } from '@adonisjs/core/container'
 import type { HttpContext } from '@adonisjs/core/http'
 
@@ -38,19 +38,50 @@ export default class RegistrationsController {
         })
     }
 
-    async show({ response, params }: HttpContext) {
+    async show({ response, params, bouncer }: HttpContext) {
         const targetRegistration = await Registration.findOrFail(params.id)
-
+        await bouncer.with(RegistrationPolicy).authorize('show', targetRegistration)
         response.json({
             message: 'User fetched successfully',
             data: targetRegistration
         })
     }
 
-    async register({ request, response }: HttpContext) {
+    async register({ auth, request, response }: HttpContext) {
         const payload = await request.validateUsing(registrationValidators)
-        this.registrationsService.register(payload)
+        const user = auth.getUserOrFail()
+        const registration = await this.registrationsService.register(user.id, payload)
 
-        response.json({ message: 'User registered successfully', data: payload })
+        response.created({
+            message: 'User registered successfully',
+            data: registration
+        })
+    }
+
+    async update({ request, response, params, bouncer }: HttpContext) {
+        const { id } = params
+        const registration = await Registration.findOrFail(id)
+        await bouncer.with(RegistrationPolicy).authorize('update', registration)
+
+        const payload = await request.validateUsing(updateRegistrationValidators)
+        const result = await this.registrationsService.update(registration, payload)
+
+        response.ok({
+            message: 'User updated successfully',
+            data: result
+        })
+    }
+
+    async destroy({ params, response, bouncer }: HttpContext) {
+        const { id } = params
+        const registration = await Registration.findOrFail(id)
+        await bouncer.with(RegistrationPolicy).authorize('destroy', registration)
+        
+        const result = await this.registrationsService.destroy(registration)
+
+        response.ok({
+            message: 'User deleted successfully',
+            data: result
+        })
     }
 }
