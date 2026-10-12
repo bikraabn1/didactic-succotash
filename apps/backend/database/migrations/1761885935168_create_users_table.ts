@@ -1,4 +1,5 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
+import { UserRoles } from '../../types/registration.ts'
 
 export default class extends BaseSchema {
   protected tableName = 'users'
@@ -9,7 +10,7 @@ export default class extends BaseSchema {
       table.string('full_name').nullable()
       table.string('email', 254).notNullable().unique()
       table.string('password').notNullable()
-      table.enum('role', ['admin', 'student'])
+      table.enum('role', Object.values(UserRoles))
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

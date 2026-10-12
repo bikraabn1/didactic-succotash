@@ -3,3 +3,8 @@ export const RegistrationStatus = {
   APPROVED: 'approved',
   REJECTED: 'rejected',
 }
+
+export enum UserRoles {
+  ADMIN = 'admin',
+  STUDENT = 'student'
+}

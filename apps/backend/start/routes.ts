@@ -43,5 +43,16 @@ router
       .prefix('account')
       .as('profile')
       .use(middleware.auth())
+
+    router
+      .group(() => {
+        router.get('/', [controllers.Registrations, 'index'])
+        router.get('/show-mine', [controllers.Registrations, 'showMine'])
+        router.post('/register', [controllers.Registrations, 'register'])
+        router.get('/:id', [controllers.Registrations, 'show'])
+      })
+      .prefix('registrations')
+      .as('registrations')
+      .use(middleware.auth())
   })
-  .prefix('/api/v1')
+  .prefix('/api')

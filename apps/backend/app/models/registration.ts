@@ -3,6 +3,7 @@ import { belongsTo, column } from '@adonisjs/lucid/orm'
 import { ApiProperty } from '@foadonis/openapi/decorators'
 import { DateTime } from 'luxon'
 import User from './user.ts'
+// import { compose } from "@adonis"
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 export default class Registration extends RegistrationSchema {

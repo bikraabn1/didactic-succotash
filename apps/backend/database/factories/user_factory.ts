@@ -1,5 +1,6 @@
 import factory from '@adonisjs/lucid/factories'
 import User from '#models/user'
+import { UserRoles } from '../../types/registration.ts'
 
 export const UserFactory = factory
   .define(User, async ({ faker }) => {
@@ -7,7 +8,7 @@ export const UserFactory = factory
       fullName: faker.person.fullName(),
       email: faker.internet.email(),
       password: 'password',
-      role: faker.helpers.arrayElement(['admin', 'student']),
+      role: faker.helpers.arrayElement(Object.values(UserRoles)),
     }
   })
   .build()
