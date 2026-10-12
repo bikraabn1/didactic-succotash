@@ -1,0 +1,322 @@
+# ==============================================================================
+# NOTION PROJECT CARDS - PPDB LITE
+# ==============================================================================
+# How to use in Notion:
+# 1. Open Notion -> Create a new page or create a "Board" / "Table" Database.
+# 2. Recommended Database Properties:
+#    - Name (Title)
+#    - Epic / Module (Select: Registration, Document, Scoring, Announcement, Frontend)
+#    - Type (Select: Feature, Security, Refactor, Bug)
+#    - Status (Status: Backlog, To Do, In Progress, Review/Test, Done)
+#    - Target Role (Multi-select: Student, Admin, Public)
+# 3. Copy-paste the content of each card below into your Notion database items.
+# ==============================================================================
+
+
+==============================================================================
+EPIC 1: REGISTRATION FEATURE (BACKEND API FIRST)
+==============================================================================
+
+Card 1.1: [Backend] Submit Registration API
+Status: To Do
+Epic: Registration
+Type: Feature
+Target: Student
+
+Description:
+Endpoint for students to submit new registration data.
+
+Checklist:
+- [ ] Validate request payload (full_name, nisn, school_origin, phone, address, average_score).
+- [ ] Validate NISN format and ensure uniqueness.
+- [ ] Business Rule: 1 user can only have 1 registration record (unique constraint check).
+- [ ] Auto-generate a unique registration_number (e.g., REG-2026-XXXX or nanoid).
+- [ ] Set default registration status to 'pending'.
+- [ ] Save to database linked with authenticated user's ID (`user_id`).
+- [ ] Return standard JSON response: status, message, and registration data.
+
+Acceptance Criteria:
+- Authenticated student successfully submits registration form.
+- Attempting to submit a second time returns 400/422 (Already Registered error).
+
+
+------------------------------------------------------------------------------
+
+Card 1.2: [Backend] Registration Authorization & Policy
+Status: To Do
+Epic: Registration
+Type: Security / Policy
+Target: Student, Admin
+
+Description:
+Implement authorization rules using AdonisJS Bouncer to protect registration resources.
+
+Checklist:
+- [ ] Complete `show` method in `RegistrationPolicy`:
+      - Students can only view if `user.id === registration.user_id`.
+- [ ] Create `update` method in `RegistrationPolicy`:
+      - Students can only update their own record.
+      - Students can only update if status is still `pending` (lock form if `approved` or `rejected`).
+- [ ] Ensure `before()` hook in policy bypasses checks for `admin` role.
+- [ ] Apply Bouncer authorization checks in `RegistrationsController` for show & update actions.
+- [ ] Ensure 403 Forbidden exceptions return a clean, descriptive JSON response.
+
+Acceptance Criteria:
+- Students cannot view or modify registrations belonging to other students (403 Forbidden).
+- Admins can view and update all registrations without restrictions.
+
+
+------------------------------------------------------------------------------
+
+Card 1.3: [Backend] Get My Registration & Detail API
+Status: To Do
+Epic: Registration
+Type: Feature
+Target: Student, Admin
+
+Description:
+Endpoints to retrieve the authenticated user's registration data or fetch by ID.
+
+Checklist:
+- [ ] Create endpoint `GET /api/v1/registrations/me`:
+      - Query registration by `auth.user.id`.
+      - Return 404 if the user has not registered yet.
+- [ ] Complete endpoint `GET /api/v1/registrations/:id`:
+      - Authorize access using Bouncer `show` action.
+      - Support eager loading of relationships when needed (documents, score).
+- [ ] Handle 404 Not Found error gracefully.
+
+Acceptance Criteria:
+- Logged-in students can fetch their own application via `/registrations/me`.
+- Access to `/registrations/:id` is strictly governed by Bouncer policy.
+
+
+------------------------------------------------------------------------------
+
+Card 1.4: [Backend] Admin List Registrations (Pagination & Filter)
+Status: To Do
+Epic: Registration
+Type: Feature
+Target: Admin
+
+Description:
+Endpoint for administrators to view, search, and filter student registrations.
+
+Checklist:
+- [ ] Protect endpoint `GET /api/v1/registrations` with Admin role check.
+- [ ] Implement pagination (`page` and `limit`).
+- [ ] Add query filter by `status` (pending / approved / rejected).
+- [ ] Add search query by `full_name`, `nisn`, or `registration_number`.
+- [ ] Default sorting by `created_at DESC`.
+
+Acceptance Criteria:
+- Admin can browse paginated registrations with search and filtering.
+- Non-admin users are denied access to the general list endpoint.
+
+
+==============================================================================
+EPIC 2: DOCUMENT UPLOAD & VERIFICATION FEATURE
+==============================================================================
+
+Card 2.1: [Backend] Upload Document API
+Status: Backlog
+Epic: Document
+Type: Feature
+Target: Student
+
+Description:
+Endpoint for students to upload required supporting documents (diploma, family card, report card/certificates).
+
+Checklist:
+- [ ] Endpoint `POST /api/v1/registrations/documents`.
+- [ ] Validate file type (PDF / PNG / JPG) and file size limit (max 2MB).
+- [ ] Validate document `type` enum (diploma, family_card, certificate, etc.).
+- [ ] Save file to storage (local disk / R2 / S3) and record `file_path` in `documents` table.
+- [ ] Set default document status to `pending`.
+- [ ] Associate document with current user's `registration_id`.
+
+Acceptance Criteria:
+- Files are securely stored and properly linked to the student's registration.
+
+
+------------------------------------------------------------------------------
+
+Card 2.2: [Backend] Admin Document Verification API
+Status: Backlog
+Epic: Document
+Type: Feature
+Target: Admin
+
+Description:
+Endpoint for administrators to review and update document validity status.
+
+Checklist:
+- [ ] Endpoint `PATCH /api/v1/admin/documents/:id/status`.
+- [ ] Update document status to `verified` / `rejected`.
+- [ ] (Optional) Add rejection reason/notes if document is invalid.
+- [ ] Validate workflow consistency: when all documents are verified, registration is eligible for scoring.
+
+Acceptance Criteria:
+- Admin can individually approve or reject uploaded documents.
+
+
+==============================================================================
+EPIC 3: SCORING & LIVE LEADERBOARD FEATURE
+==============================================================================
+
+Card 3.1: [Backend] Input & Calculation of Scores
+Status: Backlog
+Epic: Scoring
+Type: Feature
+Target: Admin
+
+Description:
+Admin inputs candidate scores and the system calculates final weighted scores.
+
+Checklist:
+- [ ] Endpoint `POST / PUT /api/v1/admin/registrations/:id/scores`.
+- [ ] Input `academic_score` and `achievement_score`.
+- [ ] Automatically calculate `final_score` based on predefined weights.
+- [ ] Persist to `scores` table with 1-to-1 relationship to `registrations`.
+
+Acceptance Criteria:
+- Scores are stored and final weighted values are accurately computed.
+
+
+------------------------------------------------------------------------------
+
+Card 3.2: [Backend] Public Live Leaderboard API
+Status: Backlog
+Epic: Scoring
+Type: Feature
+Target: Public, Student
+
+Description:
+Public endpoint to transparently display live selection ranking.
+
+Checklist:
+- [ ] Endpoint `GET /api/v1/leaderboard`.
+- [ ] Query registered candidates ordered by `final_score DESC`.
+- [ ] Apply tie-breaker rules for identical scores (e.g., highest academic score / earlier `created_at`).
+- [ ] Mask sensitive personal data (partial name masking, omit phone numbers and address).
+- [ ] Include dynamic rank position index.
+
+Acceptance Criteria:
+- Public visitors can view the real-time leaderboard ranking.
+
+
+------------------------------------------------------------------------------
+
+Card 3.3: [Backend] Final Day Decision & Disqualification
+Status: Backlog
+Epic: Scoring
+Type: Feature
+Target: Admin
+
+Description:
+Admin can intervene on final decisions (disqualification / withdrawal) and finalize quota results.
+
+Checklist:
+- [ ] Endpoint `PATCH /api/v1/admin/registrations/:id/status` (override to rejected / withdrawn / disqualified).
+- [ ] Disqualified/withdrawn candidates are automatically excluded from the leaderboard calculation.
+- [ ] Endpoint `POST /api/v1/admin/registrations/publish-results` to batch lock final quotas.
+
+Acceptance Criteria:
+- If a top-ranking student is disqualified or withdraws, candidates below immediately advance to fill quota.
+
+
+==============================================================================
+EPIC 4: ANNOUNCEMENTS FEATURE
+==============================================================================
+
+Card 4.1: [Backend] Public Announcements API
+Status: Backlog
+Epic: Announcement
+Type: Feature
+Target: Public, Student
+
+Description:
+Display published public notice board updates and news.
+
+Checklist:
+- [ ] Endpoint `GET /api/v1/announcements`.
+- [ ] Filter records where `published_at <= NOW()`.
+- [ ] Endpoint `GET /api/v1/announcements/:id`.
+
+Acceptance Criteria:
+- Public users can browse published official notices.
+
+
+------------------------------------------------------------------------------
+
+Card 4.2: [Backend] Admin CRUD Announcements
+Status: Backlog
+Epic: Announcement
+Type: Feature
+Target: Admin
+
+Description:
+Admin creates and manages notice board announcements.
+
+Checklist:
+- [ ] Endpoint `POST /api/v1/admin/announcements` (create draft/scheduled notice).
+- [ ] Endpoint `PUT /api/v1/admin/announcements/:id` (update notice).
+- [ ] Endpoint `DELETE /api/v1/admin/announcements/:id` (delete notice).
+- [ ] Role check: admin only.
+
+Acceptance Criteria:
+- Admin has full control over announcement content and publishing schedules.
+
+
+==============================================================================
+EPIC 5: FRONTEND IMPLEMENTATION (FEATURE BY FEATURE)
+==============================================================================
+
+Card 5.1: [Frontend] Registration Form & My Status Dashboard
+Status: Backlog
+Epic: Frontend
+Type: Feature
+Target: Student
+
+Checklist:
+- [ ] Build student registration form with client-side validation schema.
+- [ ] Integrate with `POST /api/v1/registrations` endpoint.
+- [ ] Student dashboard view displaying registration profile and current status badge.
+- [ ] Disable/lock form edits once status progresses beyond `pending`.
+
+
+Card 5.2: [Frontend] Document Upload UI
+Status: Backlog
+Epic: Frontend
+Type: Feature
+Target: Student
+
+Checklist:
+- [ ] Drag-and-drop document upload component.
+- [ ] File preview support (Image / PDF viewer modal).
+- [ ] Display document verification status and feedback notes.
+
+
+Card 5.3: [Frontend] Live Score / Leaderboard View
+Status: Backlog
+Epic: Frontend
+Type: Feature
+Target: Public, Student
+
+Checklist:
+- [ ] Interactive leaderboard table with rank indicators.
+- [ ] Visual quota cutoff threshold indicator (safe zone vs unsafe zone).
+- [ ] Search input by candidate name or registration number.
+
+
+Card 5.4: [Frontend] Admin Control Panel
+Status: Backlog
+Epic: Frontend
+Type: Feature
+Target: Admin
+
+Checklist:
+- [ ] Registrations datatable with status filter tabs and search.
+- [ ] Candidate detail page for document verification and score input.
+- [ ] Disqualification and status override action buttons.
+- [ ] Announcements editor and management view.

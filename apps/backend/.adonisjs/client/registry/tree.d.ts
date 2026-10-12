@@ -18,4 +18,12 @@ export interface ApiDefinition {
       destroy: typeof routes['profile.access_tokens.destroy']
     }
   }
+  registrations: {
+    registrations: {
+      index: typeof routes['registrations.registrations.index']
+      showMine: typeof routes['registrations.registrations.show_mine']
+      register: typeof routes['registrations.registrations.register']
+      show: typeof routes['registrations.registrations.show']
+    }
+  }
 }

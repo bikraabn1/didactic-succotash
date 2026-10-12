@@ -9,7 +9,7 @@ export type ParamValue = string | number | bigint | boolean
 export interface Registry {
   'auth.new_account.store': {
     methods: ["POST"]
-    pattern: '/api/v1/auth/signup'
+    pattern: '/api/auth/signup'
     types: {
       body: ExtractBody<InferInput<(typeof import('#validators/user').signupValidator)>>
       paramsTuple: []
@@ -21,7 +21,7 @@ export interface Registry {
   }
   'auth.access_tokens.store': {
     methods: ["POST"]
-    pattern: '/api/v1/auth/login'
+    pattern: '/api/auth/login'
     types: {
       body: ExtractBody<InferInput<(typeof import('#validators/user').loginValidator)>>
       paramsTuple: []
@@ -33,7 +33,7 @@ export interface Registry {
   }
   'profile.profile.show': {
     methods: ["GET","HEAD"]
-    pattern: '/api/v1/account/profile'
+    pattern: '/api/account/profile'
     types: {
       body: {}
       paramsTuple: []
@@ -45,7 +45,7 @@ export interface Registry {
   }
   'profile.access_tokens.destroy': {
     methods: ["POST"]
-    pattern: '/api/v1/account/logout'
+    pattern: '/api/account/logout'
     types: {
       body: {}
       paramsTuple: []
@@ -53,6 +53,54 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/access_tokens_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/access_tokens_controller').default['destroy']>>>
+    }
+  }
+  'registrations.registrations.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/registrations'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/registrations_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/registrations_controller').default['index']>>>
+    }
+  }
+  'registrations.registrations.show_mine': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/registrations/show-mine'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/registrations_controller').default['showMine']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/registrations_controller').default['showMine']>>>
+    }
+  }
+  'registrations.registrations.register': {
+    methods: ["POST"]
+    pattern: '/api/registrations/register'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/registration').registrationValidators)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/registration').registrationValidators)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/registrations_controller').default['register']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/registrations_controller').default['register']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'registrations.registrations.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/registrations/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/registrations_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/registrations_controller').default['show']>>>
     }
   }
 }
